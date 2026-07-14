@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "46016047762",
+    "project_id": "ai-ambulance-app-805d2",
+    "storage_bucket": "ai-ambulance-app-805d2.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:46016047762:android:0f0672ba08e1a69c2c144b",
+        "android_client_info": {
+          "package_name": "com.example.ambulance_ai_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCoBLUOLQCTkRG2pRt1o6JPEoPLAhWarWw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
