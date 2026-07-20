@@ -1,13 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
+import '../home/main_navigation_screen.dart';
 import '../../providers/auth_provider.dart';
 import '../../core/constants/app_constants.dart';
 
 import '../auth/login_screen.dart';
 
-import '../patient/patient_navigation.dart';
+// import '../patient/patient_navigation.dart';
 import '../driver/driver_navigation.dart';
 import '../admin/admin_navigation.dart';
 
@@ -57,7 +57,7 @@ class AuthWrapper extends ConsumerWidget {
                 return const AdminNavigation();
 
               default:
-                return const PatientNavigation();
+                return const MainNavigationScreen();
             }
           },
         );

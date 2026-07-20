@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
-import '../auth/login_screen.dart';
+import 'package:go_router/go_router.dart';
+// import '../auth/login_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -11,11 +11,12 @@ class ProfileScreen extends StatelessWidget {
 
     if (!context.mounted) return;
 
-    Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(builder: (_) => const LoginScreen()),
-      (route) => false,
-    );
+    // Navigator.pushAndRemoveUntil(
+    //   context,
+    //   MaterialPageRoute(builder: (_) => const LoginScreen()),
+    //   (route) => false,
+    // );
+    context.go('/login');
   }
 
   @override

@@ -3,7 +3,17 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class GeminiService {
-  static final String apiKey = dotenv.env['GEMINI_API_KEY'] ?? '';
+  static String get apiKey {
+    final key = dotenv.env['GEMINI_API_KEY'];
+
+    if (key == null || key.isEmpty) {
+      throw Exception(
+        'GEMINI_API_KEY not found. Make sure the .env file is loaded.',
+      );
+    }
+
+    return key;
+  }
   // PASTE YOUR NEW GEMINI API KEY HERE
 
   static Future<String> askGemini(String prompt) async {
@@ -35,7 +45,11 @@ class GeminiService {
 
       final data = jsonDecode(response.body);
 
-      return data['candidates'][0]['content']['parts'][0]['text'];
+      if (data['candidates'] == null || (data['candidates'] as List).isEmpty) {
+        throw Exception('No response received from Gemini.');
+      }
+
+      return data['candidates'][0]['content']['parts'][0]['text'] as String;
     } catch (e) {
       throw Exception(e.toString());
     }

@@ -82,7 +82,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           .collection(AppConstants.usersCollection)
           .doc(uid)
           .update({"createdAt": FieldValue.serverTimestamp()});
-
+      await FirebaseAuth.instance.signOut();
       if (!mounted) return;
 
       ScaffoldMessenger.of(
@@ -187,7 +187,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 const SizedBox(height: 16),
 
                 DropdownButtonFormField<String>(
-                  value: bloodGroupController.text.isEmpty
+                  initialValue: bloodGroupController.text.isEmpty
                       ? null
                       : bloodGroupController.text,
                   items: bloodGroups
@@ -274,7 +274,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 const SizedBox(height: 20),
 
                 DropdownButtonFormField<String>(
-                  value: selectedRole,
+                  initialValue: selectedRole,
                   items: const [
                     DropdownMenuItem(
                       value: AppConstants.patientRole,

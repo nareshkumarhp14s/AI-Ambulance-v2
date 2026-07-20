@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
 import '../../services/gemini_service.dart';
 
 class AiAssistantScreen extends StatefulWidget {
@@ -11,14 +13,11 @@ class AiAssistantScreen extends StatefulWidget {
 class _AiAssistantScreenState extends State<AiAssistantScreen> {
   final TextEditingController controller = TextEditingController();
 
-  String response = '';
-
+  String response = "";
   bool isLoading = false;
 
   Future<void> askAI() async {
-    if (controller.text.trim().isEmpty) {
-      return;
-    }
+    if (controller.text.trim().isEmpty) return;
 
     setState(() {
       isLoading = true;
@@ -32,13 +31,22 @@ class _AiAssistantScreenState extends State<AiAssistantScreen> {
       });
     } catch (e) {
       setState(() {
-        response = 'Failed to get AI response.\n\n$e';
+        response = "Failed to get AI response.\n\n$e";
       });
     }
 
     setState(() {
       isLoading = false;
     });
+  }
+
+  Widget quickChip(String text) {
+    return ActionChip(
+      label: Text(text),
+      onPressed: () {
+        controller.text = text;
+      },
+    );
   }
 
   @override
@@ -50,21 +58,37 @@ class _AiAssistantScreenState extends State<AiAssistantScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('AI Emergency Assistant')),
-
+      appBar: AppBar(
+        title: const Text("AI Emergency Assistant"),
+        centerTitle: true,
+      ),
       body: Padding(
         padding: const EdgeInsets.all(20),
-
         child: Column(
           children: [
+            Wrap(
+              spacing: 10,
+              runSpacing: 10,
+              children: [
+                quickChip("Heart Attack"),
+                quickChip("Road Accident"),
+                quickChip("Fire Emergency"),
+                quickChip("Breathing Problem"),
+                quickChip("Chest Pain"),
+                quickChip("High Fever"),
+              ],
+            ),
+
+            const SizedBox(height: 20),
+
             TextField(
               controller: controller,
-
-              maxLines: 3,
-
-              decoration: const InputDecoration(
-                hintText: 'Describe your emergency or symptoms...',
-                border: OutlineInputBorder(),
+              maxLines: 4,
+              decoration: InputDecoration(
+                hintText: "Describe your emergency...",
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
               ),
             ),
 
@@ -72,44 +96,87 @@ class _AiAssistantScreenState extends State<AiAssistantScreen> {
 
             SizedBox(
               width: double.infinity,
-
-              child: ElevatedButton(
+              child: ElevatedButton.icon(
+                icon: const Icon(Icons.smart_toy),
+                label: Text(
+                  isLoading ? "Getting AI Response..." : "Ask AI Assistant",
+                ),
                 onPressed: isLoading ? null : askAI,
-
-                child: isLoading
-                    ? const SizedBox(
-                        height: 20,
-                        width: 20,
-
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      )
-                    : const Text('Ask AI Assistant'),
               ),
             ),
 
-            const SizedBox(height: 25),
+            const SizedBox(height: 10),
+
+            if (controller.text.isNotEmpty)
+              SizedBox(
+                width: double.infinity,
+                child: OutlinedButton.icon(
+                  icon: const Icon(Icons.clear),
+                  label: const Text("Clear"),
+                  onPressed: () {
+                    controller.clear();
+
+                    setState(() {
+                      response = "";
+                    });
+                  },
+                ),
+              ),
+
+            const SizedBox(height: 20),
 
             Expanded(
               child: Container(
                 width: double.infinity,
-
-                padding: const EdgeInsets.all(20),
-
+                padding: const EdgeInsets.all(18),
                 decoration: BoxDecoration(
-                  color: Colors.white10,
-
+                  color: Colors.grey.shade100,
                   borderRadius: BorderRadius.circular(20),
+                  border: Border.all(color: Colors.grey.shade300),
                 ),
+                child: isLoading
+                    ? const Center(child: CircularProgressIndicator())
+                    : response.isEmpty
+                    ? const Center(
+                        child: Text(
+                          "AI response will appear here.",
+                          style: TextStyle(fontSize: 16),
+                        ),
+                      )
+                    : Column(
+                        children: [
+                          Expanded(
+                            child: SingleChildScrollView(
+                              child: Text(
+                                response,
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  height: 1.6,
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          Align(
+                            alignment: Alignment.bottomRight,
+                            child: OutlinedButton.icon(
+                              icon: const Icon(Icons.copy),
+                              label: const Text("Copy"),
+                              onPressed: () {
+                                Clipboard.setData(
+                                  ClipboardData(text: response),
+                                );
 
-                child: SingleChildScrollView(
-                  child: Text(
-                    response.isEmpty
-                        ? 'AI response will appear here...'
-                        : response,
-
-                    style: const TextStyle(fontSize: 16),
-                  ),
-                ),
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text("Copied to clipboard"),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
               ),
             ),
           ],

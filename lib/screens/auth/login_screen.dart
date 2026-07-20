@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import '../home/main_navigation_screen.dart';
+// import '../home/main_navigation_screen.dart';
 import 'register_screen.dart';
+import 'package:go_router/go_router.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -38,10 +39,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
       if (!mounted) return;
 
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => const MainNavigationScreen()),
-      );
+      // Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+      context.go('/');
     } on FirebaseAuthException catch (e) {
       ScaffoldMessenger.of(
         context,

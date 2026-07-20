@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 
 import '../auth/login_screen.dart';
 import '../home/main_navigation_screen.dart';
@@ -15,7 +15,7 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen>
     with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
+  late final AnimationController _controller;
 
   @override
   void initState() {
@@ -26,23 +26,29 @@ class _SplashScreenState extends State<SplashScreen>
       duration: const Duration(seconds: 2),
     )..repeat(reverse: true);
 
-    Timer(const Duration(seconds: 3), () {
-      if (!mounted) return;
+    _navigate();
+  }
 
-      final user = FirebaseAuth.instance.currentUser;
+  Future<void> _navigate() async {
+    await Future.delayed(const Duration(seconds: 3));
 
-      if (user != null) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => const MainNavigationScreen()),
-        );
-      } else {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => const LoginScreen()),
-        );
-      }
-    });
+    if (!mounted) return;
+
+    final user = FirebaseAuth.instance.currentUser;
+
+    debugPrint("Current User: ${user?.email}");
+
+    if (user == null) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const LoginScreen()),
+      );
+    } else {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const MainNavigationScreen()),
+      );
+    }
   }
 
   @override
@@ -74,26 +80,20 @@ class _SplashScreenState extends State<SplashScreen>
                   color: Colors.white.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(Icons.emergency, size: 90, color: Colors.red),
+                child: const Icon(Icons.emergency, color: Colors.red, size: 90),
               ),
             ),
-
             const SizedBox(height: 30),
-
             const Text(
-              'AI Ambulance App',
-              style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+              "AI Ambulance",
+              style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
             ),
-
             const SizedBox(height: 10),
-
             const Text(
-              'Smart Emergency Response System',
-              style: TextStyle(fontSize: 16, color: Colors.white70),
+              "Smart Emergency Response System",
+              style: TextStyle(color: Colors.white70),
             ),
-
-            const SizedBox(height: 50),
-
+            const SizedBox(height: 40),
             const CircularProgressIndicator(color: Colors.red),
           ],
         ),
