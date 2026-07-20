@@ -4,7 +4,7 @@ import '../ai_assistant/ai_assistant_screen.dart';
 import '../emergency/emergency_screen.dart';
 import '../home/home_screen.dart';
 import '../profile/profile_screen.dart';
-import '../tracking/tracking_screen.dart';
+// import '../tracking/tracking_screen.dart';
 
 class PatientNavigation extends StatefulWidget {
   const PatientNavigation({super.key});
@@ -19,7 +19,6 @@ class _PatientNavigationState extends State<PatientNavigation> {
   final List<Widget> screens = const [
     HomeScreen(),
     EmergencyScreen(),
-    TrackingScreen(),
     AiAssistantScreen(),
     ProfileScreen(),
   ];
@@ -47,11 +46,6 @@ class _PatientNavigationState extends State<PatientNavigation> {
             icon: Icon(Icons.emergency_outlined),
             selectedIcon: Icon(Icons.emergency),
             label: "Emergency",
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.location_on_outlined),
-            selectedIcon: Icon(Icons.location_on),
-            label: "Tracking",
           ),
           NavigationDestination(
             icon: Icon(Icons.smart_toy_outlined),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../tracking/tracking_screen.dart';
+// import '../tracking/tracking_screen.dart';
 import '../booking/booking_history_screen.dart';
 import '../profile/profile_screen.dart';
 import 'home_screen.dart';
@@ -17,7 +17,6 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
 
   final List<Widget> _screens = const [
     HomeScreen(),
-    TrackingScreen(),
     BookingHistoryScreen(),
     ProfileScreen(),
   ];

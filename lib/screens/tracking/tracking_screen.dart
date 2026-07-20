@@ -3,103 +3,142 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class TrackingScreen extends StatelessWidget {
-  const TrackingScreen({super.key});
+  final String requestId;
+
+  const TrackingScreen({super.key, required this.requestId});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Live Ambulance Tracking'),
+        title: const Text("Live Ambulance Tracking"),
         centerTitle: true,
       ),
-
       body: StreamBuilder<DocumentSnapshot>(
         stream: FirebaseFirestore.instance
-            .collection('ambulance_tracking')
-            .doc('Xc5xkWVL9wHMi5Zjj9TO')
+            .collection("ambulance_tracking")
+            .doc(requestId)
             .snapshots(),
-
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
+        builder: (context, trackingSnapshot) {
+          if (trackingSnapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           }
 
-          if (snapshot.hasError) {
-            return Center(child: Text(snapshot.error.toString()));
+          if (trackingSnapshot.hasError) {
+            return Center(child: Text(trackingSnapshot.error.toString()));
           }
 
-          if (!snapshot.hasData || !snapshot.data!.exists) {
+          if (!trackingSnapshot.hasData || !trackingSnapshot.data!.exists) {
             return const Center(
-              child: Text('Ambulance document does not exist'),
+              child: Text("Waiting for ambulance location..."),
             );
           }
 
-          final data = snapshot.data!.data() as Map<String, dynamic>;
+          final tracking =
+              trackingSnapshot.data!.data() as Map<String, dynamic>;
 
-          final String status = data['status']?.toString() ?? 'Unknown';
+          final double latitude =
+              (tracking["latitude"] as num?)?.toDouble() ?? 0.0;
 
-          final String eta = data['eta']?.toString() ?? 'N/A';
+          final double longitude =
+              (tracking["longitude"] as num?)?.toDouble() ?? 0.0;
 
-          final double latitude = (data['latitude'] as num).toDouble();
+          final String status = tracking["status"] ?? "Searching";
 
-          final double longitude = (data['longitude'] as num).toDouble();
+          final String driverId = tracking["driverId"] ?? "";
 
-          final LatLng ambulanceLocation = LatLng(latitude, longitude);
+          final LatLng ambulance = LatLng(latitude, longitude);
 
           return Column(
             children: [
               Expanded(
-                flex: 2,
+                flex: 3,
                 child: GoogleMap(
                   initialCameraPosition: CameraPosition(
-                    target: ambulanceLocation,
-                    zoom: 18,
+                    target: ambulance,
+                    zoom: 16,
                   ),
-
+                  myLocationEnabled: true,
+                  myLocationButtonEnabled: true,
+                  zoomControlsEnabled: true,
                   markers: {
                     Marker(
-                      markerId: const MarkerId('ambulance'),
-                      position: ambulanceLocation,
-                      infoWindow: const InfoWindow(title: 'Ambulance'),
+                      markerId: const MarkerId("ambulance"),
+                      position: ambulance,
+                      infoWindow: const InfoWindow(title: "Ambulance"),
                     ),
                   },
                 ),
               ),
 
               Expanded(
-                flex: 1,
+                flex: 2,
                 child: Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Column(
-                    children: [
-                      Card(
-                        child: ListTile(
-                          leading: const Icon(
-                            Icons.local_hospital,
-                            color: Colors.red,
+                  padding: const EdgeInsets.all(16),
+                  child: StreamBuilder<DocumentSnapshot>(
+                    stream: FirebaseFirestore.instance
+                        .collection("drivers")
+                        .doc(driverId)
+                        .snapshots(),
+                    builder: (context, driverSnapshot) {
+                      String driverName = "Waiting...";
+                      String phone = "";
+
+                      if (driverSnapshot.hasData &&
+                          driverSnapshot.data!.exists) {
+                        final driver =
+                            driverSnapshot.data!.data() as Map<String, dynamic>;
+
+                        driverName = driver["name"] ?? "Driver";
+
+                        phone = driver["phone"] ?? "";
+                      }
+
+                      return Column(
+                        children: [
+                          Card(
+                            child: ListTile(
+                              leading: const Icon(
+                                Icons.local_hospital,
+                                color: Colors.red,
+                              ),
+                              title: Text(status.toUpperCase()),
+                              subtitle: const Text("Ambulance Status"),
+                            ),
                           ),
 
-                          title: Text(status.toUpperCase()),
+                          const SizedBox(height: 10),
 
-                          subtitle: Text('ETA: $eta'),
-                        ),
-                      ),
-
-                      const SizedBox(height: 20),
-
-                      Card(
-                        child: ListTile(
-                          leading: const Icon(
-                            Icons.location_on,
-                            color: Colors.red,
+                          Card(
+                            child: ListTile(
+                              leading: const Icon(
+                                Icons.person,
+                                color: Colors.blue,
+                              ),
+                              title: Text(driverName),
+                              subtitle: Text(phone),
+                            ),
                           ),
 
-                          title: Text('Latitude: $latitude'),
+                          const SizedBox(height: 10),
 
-                          subtitle: Text('Longitude: $longitude'),
-                        ),
-                      ),
-                    ],
+                          Card(
+                            child: ListTile(
+                              leading: const Icon(
+                                Icons.location_on,
+                                color: Colors.green,
+                              ),
+                              title: Text(
+                                "Lat : ${latitude.toStringAsFixed(6)}",
+                              ),
+                              subtitle: Text(
+                                "Lng : ${longitude.toStringAsFixed(6)}",
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+                    },
                   ),
                 ),
               ),

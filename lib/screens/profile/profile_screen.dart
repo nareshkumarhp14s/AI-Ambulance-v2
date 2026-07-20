@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-// import '../auth/login_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -11,11 +10,6 @@ class ProfileScreen extends StatelessWidget {
 
     if (!context.mounted) return;
 
-    // Navigator.pushAndRemoveUntil(
-    //   context,
-    //   MaterialPageRoute(builder: (_) => const LoginScreen()),
-    //   (route) => false,
-    // );
     context.go('/login');
   }
 
@@ -23,37 +17,96 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser;
 
+    final email = user?.email ?? "No Email";
+    final name = user?.displayName ?? "Patient";
+    final phone = user?.phoneNumber ?? "Not Added";
+
     return Scaffold(
-      appBar: AppBar(title: const Text('Profile')),
-
-      body: Padding(
+      appBar: AppBar(title: const Text("Profile"), centerTitle: true),
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
-
         child: Column(
           children: [
-            const CircleAvatar(radius: 50, child: Icon(Icons.person, size: 50)),
+            const CircleAvatar(radius: 55, child: Icon(Icons.person, size: 60)),
 
             const SizedBox(height: 20),
 
             Text(
-              user?.email ?? 'No Email',
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              name,
+              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
 
-            const SizedBox(height: 40),
+            const SizedBox(height: 5),
+
+            Text(email, style: const TextStyle(color: Colors.grey)),
+
+            const SizedBox(height: 30),
+
+            Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: Column(
+                children: [
+                  ListTile(
+                    leading: const Icon(Icons.email),
+                    title: const Text("Email"),
+                    subtitle: Text(email),
+                  ),
+                  const Divider(height: 1),
+                  ListTile(
+                    leading: const Icon(Icons.phone),
+                    title: const Text("Phone"),
+                    subtitle: Text(phone),
+                  ),
+                  const Divider(height: 1),
+                  const ListTile(
+                    leading: Icon(Icons.bloodtype),
+                    title: Text("Blood Group"),
+                    subtitle: Text("Not Added"),
+                  ),
+                  const Divider(height: 1),
+                  const ListTile(
+                    leading: Icon(Icons.medical_services),
+                    title: Text("Medical Condition"),
+                    subtitle: Text("Not Added"),
+                  ),
+                  const Divider(height: 1),
+                  const ListTile(
+                    leading: Icon(Icons.contact_emergency),
+                    title: Text("Emergency Contact"),
+                    subtitle: Text("Not Added"),
+                  ),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: 30),
 
             SizedBox(
               width: double.infinity,
               height: 55,
+              child: OutlinedButton.icon(
+                onPressed: () {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text("Edit Profile - Coming Soon")),
+                  );
+                },
+                icon: const Icon(Icons.edit),
+                label: const Text("Edit Profile"),
+              ),
+            ),
 
+            const SizedBox(height: 15),
+
+            SizedBox(
+              width: double.infinity,
+              height: 55,
               child: ElevatedButton.icon(
                 style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-
                 onPressed: () => logout(context),
-
                 icon: const Icon(Icons.logout),
-
-                label: const Text('Logout'),
+                label: const Text("Logout"),
               ),
             ),
           ],

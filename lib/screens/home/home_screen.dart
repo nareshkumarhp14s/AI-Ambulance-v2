@@ -4,7 +4,7 @@ import '../ai_assistant/ai_assistant_screen.dart';
 import '../booking/booking_history_screen.dart';
 import '../emergency/emergency_screen.dart';
 import '../hospital/hospital_screen.dart';
-import '../tracking/tracking_screen.dart';
+// import '../tracking/tracking_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -166,18 +166,17 @@ class HomeScreen extends StatelessWidget {
                     screen: const HospitalScreen(),
                   ),
 
-                  _serviceCard(
-                    context,
+                  // _serviceCard(
+                  //   context,
 
-                    title: "Tracking",
+                  //   title: "Tracking",
 
-                    icon: Icons.location_searching,
+                  //   icon: Icons.location_searching,
 
-                    color: Colors.orange,
+                  //   color: Colors.orange,
 
-                    screen: const TrackingScreen(),
-                  ),
-
+                  //   screen: const TrackingScreen(),
+                  // ),
                   _serviceCard(
                     context,
 
