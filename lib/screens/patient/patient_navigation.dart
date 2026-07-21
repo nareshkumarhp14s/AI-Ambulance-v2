@@ -16,10 +16,10 @@ class PatientNavigation extends StatefulWidget {
 class _PatientNavigationState extends State<PatientNavigation> {
   int currentIndex = 0;
 
-  final List<Widget> screens = const [
-    HomeScreen(),
-    EmergencyScreen(),
-    AiAssistantScreen(),
+  final List<Widget> screens = [
+    const HomeScreen(),
+    const EmergencyScreen(),
+    const AiAssistantScreen(),
     ProfileScreen(),
   ];
 

@@ -1,13 +1,53 @@
 import 'package:flutter/material.dart';
 
-class DriverNavigation extends StatelessWidget {
+import 'driver_home_screen.dart';
+import 'driver_requests_screen.dart';
+import 'driver_trip_screen.dart';
+import 'driver_history_screen.dart';
+import 'driver_profile_screen.dart';
+
+class DriverNavigation extends StatefulWidget {
   const DriverNavigation({super.key});
 
   @override
+  State<DriverNavigation> createState() => _DriverNavigationState();
+}
+
+class _DriverNavigationState extends State<DriverNavigation> {
+  int currentIndex = 0;
+
+  late final List<Widget> screens = [
+    const DriverHomeScreen(),
+    const DriverRequestsScreen(),
+    const DriverTripScreen(),
+    const DriverHistoryScreen(),
+    const DriverProfileScreen(),
+  ];
+
+  @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child: Text("Driver Dashboard", style: TextStyle(fontSize: 28)),
+    return Scaffold(
+      body: IndexedStack(index: currentIndex, children: screens),
+      bottomNavigationBar: NavigationBar(
+        selectedIndex: currentIndex,
+        onDestinationSelected: (value) {
+          setState(() {
+            currentIndex = value;
+          });
+        },
+        destinations: const [
+          NavigationDestination(icon: Icon(Icons.dashboard), label: "Home"),
+          NavigationDestination(
+            icon: Icon(Icons.notifications_active),
+            label: "Requests",
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.local_shipping),
+            label: "Trip",
+          ),
+          NavigationDestination(icon: Icon(Icons.history), label: "History"),
+          NavigationDestination(icon: Icon(Icons.person), label: "Profile"),
+        ],
       ),
     );
   }

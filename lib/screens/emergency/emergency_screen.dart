@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../screens/booking/booking_status_screen.dart';
-import '../../screens/emergency/emergency_service.dart';
+import '../../services/emergency_service.dart';
 
 class EmergencyScreen extends StatefulWidget {
   const EmergencyScreen({super.key});

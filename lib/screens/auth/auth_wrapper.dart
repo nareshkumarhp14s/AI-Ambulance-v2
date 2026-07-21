@@ -56,8 +56,11 @@ class AuthWrapper extends ConsumerWidget {
               case AppConstants.adminRole:
                 return const AdminNavigation();
 
-              default:
+              case AppConstants.patientRole:
                 return const MainNavigationScreen();
+
+              default:
+                return const LoginScreen();
             }
           },
         );

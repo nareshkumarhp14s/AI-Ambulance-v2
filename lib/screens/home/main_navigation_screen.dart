@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-// import '../tracking/tracking_screen.dart';
 import '../booking/booking_history_screen.dart';
 import '../profile/profile_screen.dart';
 import 'home_screen.dart';
@@ -15,14 +14,14 @@ class MainNavigationScreen extends StatefulWidget {
 class _MainNavigationScreenState extends State<MainNavigationScreen> {
   int _selectedIndex = 0;
 
-  final List<Widget> _screens = const [
-    HomeScreen(),
-    BookingHistoryScreen(),
+  final List<Widget> _screens = [
+    const HomeScreen(),
+    const BookingHistoryScreen(),
     ProfileScreen(),
   ];
 
   void _onItemTapped(int index) {
-    if (_selectedIndex == index) return;
+    if (index >= _screens.length) return;
 
     setState(() {
       _selectedIndex = index;
@@ -41,42 +40,25 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
           child: BottomNavigationBar(
             currentIndex: _selectedIndex,
             onTap: _onItemTapped,
-
             type: BottomNavigationBarType.fixed,
-
             backgroundColor: const Color(0xff1F2937),
-
             elevation: 0,
-
             selectedItemColor: Colors.red,
-
             unselectedItemColor: Colors.white70,
-
-            selectedFontSize: 13,
-            unselectedFontSize: 12,
 
             items: const [
               BottomNavigationBarItem(
                 icon: Icon(Icons.home_rounded),
-                activeIcon: Icon(Icons.home_rounded),
                 label: 'Home',
               ),
 
               BottomNavigationBarItem(
-                icon: Icon(Icons.location_on_outlined),
-                activeIcon: Icon(Icons.location_on),
-                label: 'Tracking',
-              ),
-
-              BottomNavigationBarItem(
-                icon: Icon(Icons.history_outlined),
-                activeIcon: Icon(Icons.history),
+                icon: Icon(Icons.history),
                 label: 'History',
               ),
 
               BottomNavigationBarItem(
-                icon: Icon(Icons.person_outline),
-                activeIcon: Icon(Icons.person),
+                icon: Icon(Icons.person),
                 label: 'Profile',
               ),
             ],
