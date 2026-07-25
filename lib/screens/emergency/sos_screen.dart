@@ -1,8 +1,5 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
-
-import '../../services/sos_service.dart';
+import '../../services/emergency_service.dart';
 import '../booking/booking_status_screen.dart';
 
 class SosScreen extends StatefulWidget {
@@ -15,54 +12,18 @@ class SosScreen extends StatefulWidget {
 class _SosScreenState extends State<SosScreen> {
   bool loading = false;
 
-  Future<void> sendSOS() async {
+  Future<void> _sendSOS() async {
     if (loading) return;
 
-    setState(() {
-      loading = true;
-    });
+    setState(() => loading = true);
 
     try {
-      final currentUser = FirebaseAuth.instance.currentUser;
-
-      if (currentUser == null) {
-        throw Exception("User not logged in");
-      }
-
-      final serviceEnabled = await Geolocator.isLocationServiceEnabled();
-
-      if (!serviceEnabled) {
-        throw Exception("Location service is disabled");
-      }
-
-      LocationPermission permission = await Geolocator.checkPermission();
-
-      if (permission == LocationPermission.denied) {
-        permission = await Geolocator.requestPermission();
-      }
-
-      if (permission == LocationPermission.denied ||
-          permission == LocationPermission.deniedForever) {
-        throw Exception("Location permission denied");
-      }
-
-      final position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high,
-      );
-
-      final requestId = await SosService.createEmergency(
-        latitude: position.latitude,
-        longitude: position.longitude,
+      final requestId = await EmergencyService().sendEmergency(
+        type: "Medical Emergency",
+        description: "SOS Request",
       );
 
       if (!mounted) return;
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Emergency Request Sent Successfully"),
-          backgroundColor: Colors.green,
-        ),
-      );
 
       Navigator.pushReplacement(
         context,
@@ -73,14 +34,12 @@ class _SosScreenState extends State<SosScreen> {
     } catch (e) {
       if (!mounted) return;
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(e.toString()), backgroundColor: Colors.red),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(e.toString())));
     } finally {
       if (mounted) {
-        setState(() {
-          loading = false;
-        });
+        setState(() => loading = false);
       }
     }
   }
@@ -93,17 +52,16 @@ class _SosScreenState extends State<SosScreen> {
         child: loading
             ? const CircularProgressIndicator()
             : ElevatedButton(
-                onPressed: sendSOS,
+                onPressed: _sendSOS,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.red,
                   foregroundColor: Colors.white,
-                  minimumSize: const Size(230, 230),
+                  minimumSize: const Size(220, 220),
                   shape: const CircleBorder(),
-                  elevation: 10,
                 ),
                 child: const Text(
                   "SOS",
-                  style: TextStyle(fontSize: 48, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 46, fontWeight: FontWeight.bold),
                 ),
               ),
       ),

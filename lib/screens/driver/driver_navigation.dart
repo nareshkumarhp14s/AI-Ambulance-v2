@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'driver_home_screen.dart';
-import 'driver_requests_screen.dart';
-import 'driver_trip_screen.dart';
+
 import 'driver_history_screen.dart';
 import 'driver_profile_screen.dart';
 
@@ -18,8 +17,6 @@ class _DriverNavigationState extends State<DriverNavigation> {
 
   late final List<Widget> screens = [
     const DriverHomeScreen(),
-    const DriverRequestsScreen(),
-    const DriverTripScreen(),
     const DriverHistoryScreen(),
     const DriverProfileScreen(),
   ];
@@ -37,14 +34,6 @@ class _DriverNavigationState extends State<DriverNavigation> {
         },
         destinations: const [
           NavigationDestination(icon: Icon(Icons.dashboard), label: "Home"),
-          NavigationDestination(
-            icon: Icon(Icons.notifications_active),
-            label: "Requests",
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.local_shipping),
-            label: "Trip",
-          ),
           NavigationDestination(icon: Icon(Icons.history), label: "History"),
           NavigationDestination(icon: Icon(Icons.person), label: "Profile"),
         ],

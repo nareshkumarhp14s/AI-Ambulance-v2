@@ -83,7 +83,52 @@ class DriverProfileScreen extends StatelessWidget {
                     subtitle: Text(data["status"] ?? "Offline"),
                   ),
                 ),
+                Card(
+                  child: ListTile(
+                    leading: const Icon(Icons.star),
+                    title: const Text("Rating"),
+                    subtitle: Text("${data["rating"] ?? 0} ⭐"),
+                  ),
+                ),
 
+                Card(
+                  child: ListTile(
+                    leading: const Icon(Icons.history),
+                    title: const Text("Total Trips"),
+                    subtitle: Text("${data["totalTrips"] ?? 0}"),
+                  ),
+                ),
+
+                Card(
+                  child: ListTile(
+                    leading: const Icon(Icons.gps_fixed),
+                    title: const Text("GPS Accuracy"),
+                    subtitle: Text("${data["accuracy"] ?? 0} m"),
+                  ),
+                ),
+
+                Card(
+                  child: ListTile(
+                    leading: const Icon(Icons.speed),
+                    title: const Text("Current Speed"),
+                    subtitle: Text("${data["speed"] ?? 0} km/h"),
+                  ),
+                ),
+
+                Card(
+                  child: ListTile(
+                    leading: Icon(
+                      (data["online"] ?? false) ? Icons.wifi : Icons.wifi_off,
+                      color: (data["online"] ?? false)
+                          ? Colors.green
+                          : Colors.red,
+                    ),
+                    title: const Text("Online Status"),
+                    subtitle: Text(
+                      (data["online"] ?? false) ? "Online" : "Offline",
+                    ),
+                  ),
+                ),
                 const SizedBox(height: 30),
 
                 SizedBox(

@@ -44,7 +44,9 @@ class _AiAssistantScreenState extends State<AiAssistantScreen> {
     return ActionChip(
       label: Text(text),
       onPressed: () {
-        controller.text = text;
+        setState(() {
+          controller.text = text;
+        });
       },
     );
   }
@@ -130,36 +132,90 @@ class _AiAssistantScreenState extends State<AiAssistantScreen> {
                 width: double.infinity,
                 padding: const EdgeInsets.all(18),
                 decoration: BoxDecoration(
-                  color: Colors.grey.shade100,
+                  color: const Color(0xFF1E293B),
                   borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: Colors.grey.shade300),
+                  border: Border.all(color: Colors.white24),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black26,
+                      blurRadius: 10,
+                      offset: const Offset(0, 5),
+                    ),
+                  ],
                 ),
                 child: isLoading
-                    ? const Center(child: CircularProgressIndicator())
+                    ? const Center(
+                        child: CircularProgressIndicator(color: Colors.red),
+                      )
                     : response.isEmpty
                     ? const Center(
-                        child: Text(
-                          "AI response will appear here.",
-                          style: TextStyle(fontSize: 16),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.smart_toy,
+                              color: Colors.white38,
+                              size: 60,
+                            ),
+                            SizedBox(height: 15),
+                            Text(
+                              "AI response will appear here.",
+                              style: TextStyle(
+                                color: Colors.white60,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ],
                         ),
                       )
                     : Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          const Row(
+                            children: [
+                              CircleAvatar(
+                                radius: 18,
+                                backgroundColor: Colors.red,
+                                child: Icon(
+                                  Icons.smart_toy,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              SizedBox(width: 10),
+                              Text(
+                                "AI Assistant",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+
+                          const Divider(color: Colors.white24, height: 25),
+
                           Expanded(
                             child: SingleChildScrollView(
-                              child: Text(
+                              child: SelectableText(
                                 response,
                                 style: const TextStyle(
+                                  color: Colors.white,
                                   fontSize: 16,
-                                  height: 1.6,
+                                  height: 1.7,
                                 ),
                               ),
                             ),
                           ),
-                          const SizedBox(height: 10),
+
+                          const SizedBox(height: 12),
+
                           Align(
                             alignment: Alignment.bottomRight,
-                            child: OutlinedButton.icon(
+                            child: FilledButton.icon(
+                              style: FilledButton.styleFrom(
+                                backgroundColor: Colors.red,
+                              ),
                               icon: const Icon(Icons.copy),
                               label: const Text("Copy"),
                               onPressed: () {
